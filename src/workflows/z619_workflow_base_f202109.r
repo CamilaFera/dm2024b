@@ -112,7 +112,7 @@ DR_drifting_base <- function( pinputexps, metodo)
   if( -1 == (param_local <- exp_init())$resultado ) return( 0 ) # linea fija
 
 
-  param_local$meta$script <- "/src/wf-etapas/z541_DR_corregir_drifting.r"
+  param_local$meta$script <- "/src/wf-etapas/542_DR_corregir_drifting_GrupoB.r"
 
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
@@ -133,12 +133,12 @@ FEhist_base <- function( pinputexps)
   param_local$meta$script <- "/src/wf-etapas/z551_FE_historia.r"
 
   param_local$lag1 <- TRUE
-  param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
-  param_local$lag3 <- FALSE # no me engraso con los lags de orden 3
+  param_local$lag2 <- TRUE # no me engraso con los lags de orden 2
+  param_local$lag3 <- TRUE # no me engraso con los lags de orden 3
 
   # no me engraso las manos con las tendencias
   param_local$Tendencias1$run <- TRUE  # FALSE, no corre nada de lo que sigue
-  param_local$Tendencias1$ventana <- 6
+  param_local$Tendencias1$ventana <- 9
   param_local$Tendencias1$tendencia <- TRUE
   param_local$Tendencias1$minimo <- FALSE
   param_local$Tendencias1$maximo <- FALSE
@@ -261,14 +261,13 @@ TS_strategy_base9 <- function( pinputexps )
 
 
   param_local$future <- c(202109)
-  param_local$final_train <- c(202007, 202006, 202105, 202104,
-    202103, 202102, 202101, 202012, 202011)
+  param_local$final_train <- c(202107, 202106, 202105, 202104,
+    202103, 202102, 202101, 202012, 202011, 202010, 202009, 202008, 202007, 202005, 202004, 202003, 202002, 202001, 201912, 201911, 201910, 201909, 201908)
 
 
-  param_local$train$training <- c(202105, 202104, 202103,
-     202102, 202101, 202012, 202011, 202010, 202009)
-  param_local$train$validation <- c(202106)
-  param_local$train$testing <- c(202107)
+  param_local$train$training <- c(202103, 202102, 202101, 202012, 202011, 202010, 202009, 202008, 202007, 202005, 202004, 202003, 202002, 202001, 201912, 201911, 201910, 201909, 201908, 201907, 201906, 201905, 201904)
+  param_local$train$validation <- c(202104)
+  param_local$train$testing <- c(202107, 202106, 202105)
 
   # Atencion  0.2  de  undersampling de la clase mayoritaria,  los CONTINUA
   # 1.0 significa NO undersampling
@@ -373,7 +372,7 @@ ZZ_final_base9 <- function( pinputexps )
 
 
   # default 5 semillas
-  param_local$qsemillas <- 5
+  param_local$qsemillas <- 10
 
   return( exp_correr_script( param_local ) ) # linea fija
 }
@@ -392,10 +391,10 @@ wf_sept <- function( pnombrewf )
   DT_incorporar_dataset_competencia2024()
   CA_catastrophe_base( metodo="MachineLearning")
   FEintra_base()
-  DR_drifting_base(metodo="rank_cero_fijo")
+  DR_drifting_base(metodo="uva")
   FEhist_base()
-  FErf_attributes_base()
-  #CN_canaritos_asesinos_base(ratio=0.2, desvio=4.0)
+  #FErf_attributes_base()
+  CN_canaritos_asesinos_base(ratio=1.5, desvio=1.5)
 
   ts9 <- TS_strategy_base9()
   ht <- HT_tuning_base()
